@@ -7,6 +7,8 @@ export default function Home() {
       <h1>new data add</h1>
       <h1>dddfghjkl</h1>
       <h1>dfghjkl</h1>
+      <h1>dfghjkl</h1>
+      <h1>dfghjkl</h1>
     </div>
   )
 }

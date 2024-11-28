@@ -1,6 +1,7 @@
 import Features from "@/components/Feature/Features";
 import Footer from "@/components/Footer/Footer";
-import Hero from "@/components/Hero/Hero";
+// import Hero from "@/components/Hero/Hero";
+
 import Testimonial from "@/components/Testimonial/Testimonial";
 import { Button } from "@/components/ui/button";
 import UpcomingClasses from "@/components/UpcomingClases/UpcomingClasses";
@@ -11,7 +12,7 @@ export default function Home() {
       {/**Hero section  */}
       <div className="p-2">
         {" "}
-        <Hero />
+        {/* <Hero /> */}
       </div>
       {/**Features Section */}
       <div className="p-2">

@@ -8,14 +8,29 @@ import Link from 'next/link';
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 import signup_Animation from "../../../public/assets/Animation.json";
+import axios from 'axios';
 
 const Signup = () => {
     const { register, handleSubmit, formState: { errors }, watch } = useForm();
     const [loading, setLoading] = useState(false);
 
-    const onSubmit = (data) => {
-        console.log(data);
+    const onSubmit = async (data) => {
+        const { name, email, password } = data;
+        console.log("Form Data:", { name, email, password });
         // handle your form submission logic here
+        try {
+            const response = await axios.post('signup/api',{ name, email, password });
+            if (response.status === 201) {
+                console.log("User created successfully:", response.data);
+                // Handle success (e.g., redirect to login page)
+            } else {
+                console.error("Error:", response.data.error);
+                alert(response.data.error || "An error occurred");
+            }
+        } catch (error) {
+            console.error("Error during signup:", error);
+            alert("An unexpected error occurred");
+        }
     };
 
     const handleGoogleSignUp = () => {

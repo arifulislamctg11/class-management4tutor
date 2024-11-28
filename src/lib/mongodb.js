@@ -1,20 +1,13 @@
-import { MongoClient, ServerApiVersion } from "mongodb";
-
-let db;
+const mongoose = require('mongoose');
 
 export const mongodb = async () => {
-  if (db) return db;
   try {
-    const uri = process.env.NEXT_PUBLIC_MONGODB_URI;
-    const client = new MongoClient(uri, {
-      serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-      },
+    // Use Mongoose to connect to the MongoDB database
+    await mongoose.connect(process.env.NEXT_PUBLIC_MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
     });
-    db = client.db("tutor-management");
-    return db;
+    return mongoose.connection; // Return the Mongoose connection instance
   } catch (error) {
     console.error("MongoDB Connection Error:", error);
     throw new Error("Failed to connect to the database.");

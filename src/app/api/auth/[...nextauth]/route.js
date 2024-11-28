@@ -1,57 +1,107 @@
-
-
 import { mongodb } from "@/lib/mongodb";
-import NextAuth from "next-auth/next"
+import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
-
+import GoogleProvider from "next-auth/providers/google";
 
 const handler = NextAuth({
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60
-    // maxAge: 20,
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   providers: [
+    // Credentials Provider for email/password login
     CredentialsProvider({
       credentials: {
-        email: {},
-        password: {},
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const { email, password } = credentials
-        if (email || password) {
-         return null
-        }
-        const db =await mongodb()
-        const currentUser = await db.collection('users').findOne({ email })
-        if (!currentUser) {
-          return null
-        }
-        const isPassword =currentUser.password===password
-        if(!isPassword){
-          return null
-        }
-        return currentUser
+        const { email, password } = credentials;
 
+        // Ensure both email and password are provided
+        if (!email || !password) {
+          return null;
+        }
+
+        const db = await mongodb();
+
+        // Find user by email
+        const currentUser = await db.collection("users").findOne({ email });
+        if (!currentUser) {
+          return null;
+        }
+
+        // Compare provided password with stored password
+        if (currentUser.password !== password) {
+          return null;
+        }
+
+        // Return user object
+        return {
+          id: currentUser._id.toString(),
+          email: currentUser.email,
+          name: currentUser.name || "User",
+        };
       },
+    }),
+
+    // Google Provider for OAuth login
+    GoogleProvider({
+      clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+      clientSecret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET,
     }),
   ],
   callbacks: {
+    // Session callback to attach user info to the session
     async session({ session, token }) {
-      // Attach user ID to session
       session.user.id = token.id;
+      session.user.email = token.email;
       return session;
     },
-    async jwt({ token, user }) {
-      // Persist user ID in the token
+
+    // JWT callback to handle tokens
+    async jwt({ token, user, account }) {
+      // If a new user is signed in
       if (user) {
         token.id = user.id;
+        token.email = user.email;
       }
       return token;
     },
+
+    // Sign-in callback for handling Google users
+    async signIn({ user, account, profile }) {
+      if (account.provider === "google") {
+        const { email, name, picture } = profile;
+
+        try {
+          const db = await mongodb();
+          const userCollection = db.collection("users");
+
+          // Check if the user already exists
+          const userExists = await userCollection.findOne({ email });
+
+          if (!userExists) {
+            // If user doesn't exist, create a new record in the database
+            await userCollection.insertOne({
+              email,
+              name,
+              image: picture,
+              provider: "google",
+              createdAt: new Date(),
+            });
+          }
+        } catch (error) {
+          console.error("Error during Google sign-in:", error);
+          return false; // Reject sign-in in case of an error
+        }
+      }
+
+      return true; // Allow sign-in
+    },
   },
   pages: {
-    signIn: '/login',
+    signIn: "/login", // Custom sign-in page
   },
 });
 

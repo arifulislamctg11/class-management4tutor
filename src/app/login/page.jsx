@@ -4,13 +4,15 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { FaGoogle } from "react-icons/fa";
 import { useForm } from "react-hook-form";
-
+import { signIn } from "next-auth/react";
 // Dynamically import Lottie component
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 import loginAnimation from "../../../public/assets/login.json";
 import signup_Animation from "../../../public/assets/Animation.json";
-
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 const Login = () => {
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const {
     register,
@@ -23,12 +25,39 @@ const Login = () => {
     return () => clearTimeout(timer); // Clean up the timer
   }, []);
 
-  const onSubmit = (data) => {
-    console.log("Form Submitted:", data);
+  const onSubmit = async (data) => {
+    const { email, password } = data;
+    console.log(data);
+
+    const result = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+    });
+
+    if (result?.error) {
+      console.log("Error signing in:", result.error);
+
+      toast.error("Are you signed in?");
+    } else {
+      console.log("Sign-in successful!");
+      toast.success("Welcome Back!");
+      router.push("/");
+    }
   };
 
-  const handleGoogleSignIn = () => {
-    console.log("Google Sign In");
+  const handleGoogleSignIn = async () => {
+    const result = await signIn("google", {
+      callbackUrl: "http://localhost:3000",
+    });
+    if (!result?.error) {
+      console.log("Google Sign-in successful!");
+      toast.success("Welcome Back!");
+      router.push("/"); // Redirect to homepage manually
+    } else {
+      console.log("Error signing in with Google:", result.error);
+      toast.error("Google sign-in failed.");
+    }
   };
 
   if (loading) {
@@ -65,7 +94,10 @@ const Login = () => {
               <form onSubmit={handleSubmit(onSubmit)} className="mt-6">
                 {/* Email Input */}
                 <div className="mb-4">
-                  <label className="block text-sm font-bold mb-2" htmlFor="email">
+                  <label
+                    className="block text-sm font-bold mb-2"
+                    htmlFor="email"
+                  >
                     Email
                   </label>
                   <input
@@ -84,13 +116,18 @@ const Login = () => {
 
                 {/* Password Input */}
                 <div className="mb-4">
-                  <label className="block text-sm font-bold mb-2" htmlFor="password">
+                  <label
+                    className="block text-sm font-bold mb-2"
+                    htmlFor="password"
+                  >
                     Password
                   </label>
                   <input
                     type="password"
                     id="password"
-                    {...register("password", { required: "Password is required" })}
+                    {...register("password", {
+                      required: "Password is required",
+                    })}
                     placeholder="Enter your Password"
                     className={`w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-indigo-500 ${
                       errors.password ? "border-red-500" : "border-gray-300"
@@ -119,20 +156,19 @@ const Login = () => {
                   <FaGoogle className="mr-2" />
                   Sign Up with Google
                 </button>
-
-                {/* Signup Link */}
-                <div className="mt-6 flex justify-center items-center mb-3">
-                  <span className="font-bold pb-4 text-center mt-3">
-                    Don&apos;t have an account?
-                    <Link
-                      href="/signup"
-                      className="text-blue-700 cursor-pointer hover:underline ml-2"
-                    >
-                      Sign Up
-                    </Link>
-                  </span>
-                </div>
               </form>
+              {/* Signup Link */}
+              <div className="mt-6 flex justify-center items-center mb-3">
+                <span className="font-bold pb-4 text-center mt-3">
+                  Don&apos;t have an account?
+                  <Link
+                    href="/signup"
+                    className="text-blue-700 cursor-pointer hover:underline ml-2"
+                  >
+                    Sign Up
+                  </Link>
+                </span>
+              </div>
             </div>
           </div>
         </div>

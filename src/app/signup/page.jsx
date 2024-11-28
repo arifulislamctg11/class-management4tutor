@@ -15,10 +15,11 @@ const Signup = () => {
     const [loading, setLoading] = useState(false);
 
     const onSubmit = async (data) => {
-        console.log("Form Data:", data);
+        const { name, email, password } = data;
+        console.log("Form Data:", { name, email, password });
         // handle your form submission logic here
         try {
-            const response = await axios.post('signup/api', data);
+            const response = await axios.post('signup/api',{ name, email, password });
             if (response.status === 201) {
                 console.log("User created successfully:", response.data);
                 // Handle success (e.g., redirect to login page)

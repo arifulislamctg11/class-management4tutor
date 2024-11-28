@@ -29,7 +29,7 @@ const Signup = () => {
             }
         } catch (error) {
             console.error("Error during signup:", error);
-            alert("An unexpected error occurred");
+            alert(error.response.data.error);
         }
     };
 

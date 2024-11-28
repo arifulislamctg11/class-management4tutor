@@ -1,6 +1,7 @@
 import Features from "@/components/Feature/Features";
 import Footer from "@/components/Footer/Footer";
-import Hero from "@/components/Hero/Hero";
+import Hero from "@/components/Hero/hero";
+
 import Testimonial from "@/components/Testimonial/Testimonial";
 import { Button } from "@/components/ui/button";
 import UpcomingClasses from "@/components/UpcomingClases/UpcomingClasses";

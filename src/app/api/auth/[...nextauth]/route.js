@@ -1,57 +1,64 @@
-
-
 import { mongodb } from "@/lib/mongodb";
-import NextAuth from "next-auth/next"
+import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
-
 
 const handler = NextAuth({
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60
-    // maxAge: 20,
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   providers: [
     CredentialsProvider({
       credentials: {
-        email: {},
-        password: {},
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const { email, password } = credentials
-        if (email || password) {
-         return null
-        }
-        const db =await mongodb()
-        const currentUser = await db.collection('users').findOne({ email })
-        if (!currentUser) {
-          return null
-        }
-        const isPassword =currentUser.password===password
-        if(!isPassword){
-          return null
-        }
-        return currentUser
+        const { email, password } = credentials;
 
+        // Ensure both email and password are provided
+        if (!email || !password) {
+          return null;
+        }
+
+        const db = await mongodb();
+
+        // Find user by email
+        const currentUser = await db.collection("users").findOne({ email });
+        if (!currentUser) {
+          return null;
+        }
+
+        // Compare provided password with stored password
+        if (currentUser.password !== password) {
+          return null;
+        }
+
+        // Return user object
+        return {
+          id: currentUser._id.toString(),
+          email: currentUser.email,
+          name: currentUser.name || "User",
+        };
       },
     }),
   ],
   callbacks: {
     async session({ session, token }) {
-      // Attach user ID to session
       session.user.id = token.id;
+      session.user.email = token.email;
       return session;
     },
     async jwt({ token, user }) {
-      // Persist user ID in the token
       if (user) {
         token.id = user.id;
+        token.email = user.email;
       }
       return token;
     },
   },
   pages: {
-    signIn: '/login',
+    signIn: "/login", // Custom sign-in page
   },
 });
 

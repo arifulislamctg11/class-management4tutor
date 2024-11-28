@@ -1,6 +1,7 @@
 import React from "react";
 import { ArrowDownRight } from "lucide-react";
 
+
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 const Hero = () => {
@@ -32,13 +33,7 @@ const Hero = () => {
                 </Button>
               </div>
             </div>
-            <Image
-              width={500}
-              height={500}
-              alt="Picture of the author"
-              src="/assets/hero_image.jpg"
-              className="max-h-96 w-full rounded-md object-cover"
-            />
+           
           </div>
         </div>
       </section>

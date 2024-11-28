@@ -3,18 +3,20 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const db = await mongodb();
-    const collections = await db.listCollections().toArray();
+    const db = await mongodb(); // Get the Mongoose connection
+
+    // Access the native MongoDB driver via mongoose.connection.db
+    const collections = await db.db.listCollections().toArray(); 
 
     return NextResponse.json({
       message: "Connected to MongoDB!",
-      collections: collections.map((col) => col.name), // List collection names
+      collections: collections,
     });
   } catch (error) {
     console.error("Error in MongoDB connection:", error);
-    return NextResponse.json(
-      { message: "Failed to connect to MongoDB", error: error.message },
-      { status: 500 }
-    );
+    return NextResponse.json({
+      message: "Failed to connect to MongoDB",
+      error: error.message,
+    });
   }
 }

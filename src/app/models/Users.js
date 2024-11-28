@@ -1,12 +1,15 @@
-// models/Users.js
-import { Schema, model, models } from 'mongoose';
+const mongoose = require("mongoose");
 
-const UserSchema = new Schema({
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now },
-});
+const UserSchema = new mongoose.Schema(
+    {
+        name: { type: String },
+        email: { type: String, required: true,unique:true },
+        password: { type: String, required: true },
+        createdAt: { type: Date, default: Date.now },
+    },
+    { timestamps: true }
+);
 
-const User = models.User || model('User', UserSchema);
+const User = mongoose.models.User || mongoose.model("User", UserSchema);
 
-export default User;
+module.exports = User;

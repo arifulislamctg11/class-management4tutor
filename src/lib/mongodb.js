@@ -12,6 +12,7 @@ export const mongodb = async () => {
         strict: true,
         deprecationErrors: true,
       },
+      
     });
     db = client.db("tutor-management");
     return db;

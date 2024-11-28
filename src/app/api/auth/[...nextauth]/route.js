@@ -20,7 +20,7 @@ const handler = NextAuth({
       async authorize(credentials) {
         const { email, password } = credentials
         if (email || password) {
-          null
+         return null
         }
         const db =await mongodb()
         const currentUser = await db.collection('users').findOne({ email })

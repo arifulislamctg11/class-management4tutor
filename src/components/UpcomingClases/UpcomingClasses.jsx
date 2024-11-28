@@ -19,8 +19,8 @@ const UpcomingClasses = () => {
       <h1 className="text-2xl font-bold">Class List</h1>
       {/* Horizontal Scroll or Grid */}
       <div class="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3 gap-3 items-center justify-center ">
-        {classes.map((res) => (
-          <div class="w-full max-w-lg px-10 py-8 mx-auto bg-white rounded-lg shadow-xl">
+        {classes.map((res,index) => (
+          <div key={index} class="w-full max-w-lg px-10 py-8 mx-auto bg-white rounded-lg shadow-xl">
             <div class="max-w-md mx-auto space-y-6">
               <h2 class="text-2xl font-bold">{res.title}</h2>
               <div class="text-base leading-3">

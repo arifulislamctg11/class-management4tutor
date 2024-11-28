@@ -46,8 +46,18 @@ const Login = () => {
     }
   };
 
-  const handleGoogleSignIn = () => {
-    console.log("Google Sign In");
+  const handleGoogleSignIn = async () => {
+    const result = await signIn("google", {
+      callbackUrl: "http://localhost:3000",
+    });
+    if (!result?.error) {
+      console.log("Google Sign-in successful!");
+      toast.success("Welcome Back!");
+      router.push("/"); // Redirect to homepage manually
+    } else {
+      console.log("Error signing in with Google:", result.error);
+      toast.error("Google sign-in failed.");
+    }
   };
 
   if (loading) {
@@ -146,20 +156,19 @@ const Login = () => {
                   <FaGoogle className="mr-2" />
                   Sign Up with Google
                 </button>
-
-                {/* Signup Link */}
-                <div className="mt-6 flex justify-center items-center mb-3">
-                  <span className="font-bold pb-4 text-center mt-3">
-                    Don&apos;t have an account?
-                    <Link
-                      href="/signup"
-                      className="text-blue-700 cursor-pointer hover:underline ml-2"
-                    >
-                      Sign Up
-                    </Link>
-                  </span>
-                </div>
               </form>
+              {/* Signup Link */}
+              <div className="mt-6 flex justify-center items-center mb-3">
+                <span className="font-bold pb-4 text-center mt-3">
+                  Don&apos;t have an account?
+                  <Link
+                    href="/signup"
+                    className="text-blue-700 cursor-pointer hover:underline ml-2"
+                  >
+                    Sign Up
+                  </Link>
+                </span>
+              </div>
             </div>
           </div>
         </div>

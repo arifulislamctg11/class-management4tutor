@@ -7,6 +7,7 @@ import UpcomingClasses from "@/components/UpcomingClases/UpcomingClasses";
 import Features from "../components/features/page";
 import Nav from "@/components/Nav/nav";
 
+
 export default function Home() {
   return (
     <div>

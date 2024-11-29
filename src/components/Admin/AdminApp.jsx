@@ -2,7 +2,7 @@
 "use client"; // remove this line if you choose Pages Router
 import { Admin, Resource, ListGuesser, EditGuesser } from "react-admin";
 import jsonServerProvider from "ra-data-json-server";
-
+//hjahsdjkasd
 const dataProvider = jsonServerProvider("https://jsonplaceholder.typicode.com");
 
 const AdminApp = () => (

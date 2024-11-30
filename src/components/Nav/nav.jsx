@@ -97,10 +97,37 @@ const Nav = () => {
             </ul>
           </div>
           <div>
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
+            {session ? (
+              <div className="flex items-center justify-between gap-2">
+                <div>
+                  {session ? (
+                    <Avatar>
+                      {/* <AvatarImage src={session?.user?.img} /> */}
+                      <p>This is user img</p>
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                  ) : (
+                    <Avatar>
+                      <AvatarImage src="https://avatars.githubusercontent.com/u/124599?v=4" />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                  )}
+                </div>
+                <button
+                  onClick={() => signOut()}
+                  className="py-2 px-4 rounded-md border font-semibold bg-blue-600 text-white hover:bg-indigo-100 transform transition duration-300 ease-in-out hover:scale-105 focus:outline-none hover:text-black"
+                >
+                  Sign out
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => signIn()}
+                className="py-2 px-4 rounded-md border font-semibold bg-blue-600 text-white hover:bg-indigo-100 transform transition duration-300 ease-in-out hover:scale-105 focus:outline-none hover:text-black"
+              >
+                Sign in
+              </button>
+            )}
           </div>
         </div>
       </nav>

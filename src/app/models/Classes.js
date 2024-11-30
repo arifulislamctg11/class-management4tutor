@@ -9,6 +9,7 @@ const productSchema = new Schema(
   },
   {
     timestamps: true,
+    collection: "classes",
   }
 );
 

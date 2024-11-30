@@ -26,7 +26,7 @@ const Tutor = () => {
     axios
       .post("http://localhost:3000/api/dashboard/tutor", data)
       .then((response) => {
-        if (response.data.insertedId) {
+        if ((response.data.message = "Product Created")) {
           toast.success("You have successfully added");
         }
         console.log(response);

@@ -18,3 +18,9 @@ export async function POST(request) {
     { status: 201 }
   );
 }
+
+export async function GET() {
+  await mongodb();
+  const classes = await ClassModel.find();
+  return NextResponse.json({ classes });
+}

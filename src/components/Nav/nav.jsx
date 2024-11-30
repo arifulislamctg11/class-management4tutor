@@ -11,6 +11,7 @@ import { signIn } from "next-auth/react";
 const Nav = () => {
   const session = useSession();
   console.log(session.data?.user.email);
+  console.log(session?.data);
   return (
     <>
       <nav className="bg-white border-gray-200 dark:bg-gray-900">
@@ -104,11 +105,37 @@ const Nav = () => {
               <div className="flex items-center justify-between gap-2">
                 <div>
                   {session.data?.user.email ? (
-                    <Avatar>
-                      {/* <AvatarImage src={session?.user?.img} /> */}
-                      <p>This is user img</p>
-                      <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
+                    <div className="dropdown dropdown-end  ">
+                      <label
+                        tabIndex="0"
+                        className="btn btn-ghost btn-circle avatar"
+                      >
+                        <div className="w-16 rounded-full">
+                          <img src="https://avatars.githubusercontent.com/u/124599?v=4"></img>
+                        </div>
+                      </label>
+                      <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                        <li>
+                          <button className="flex items-center gap-2">
+                            <p className=" font-bold">Email:</p>{" "}
+                            {session.data?.user.email}
+                          </button>
+
+                          <button className="flex items-center gap-2">
+                            <p className=" font-bold">Name:</p>{" "}
+                            {session.data?.user.name}
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            onClick={() => signOut()}
+                            className="py-2 px-4 rounded-md border font-semibold bg-red-600 text-white hover:bg-indigo-100 transform transition duration-300 ease-in-out hover:scale-105 focus:outline-none hover:text-black"
+                          >
+                            Sign out
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
                   ) : (
                     <Avatar>
                       <AvatarImage src="https://avatars.githubusercontent.com/u/124599?v=4" />
@@ -116,12 +143,6 @@ const Nav = () => {
                     </Avatar>
                   )}
                 </div>
-                <button
-                  onClick={() => signOut()}
-                  className="py-2 px-4 rounded-md border font-semibold bg-blue-600 text-white hover:bg-indigo-100 transform transition duration-300 ease-in-out hover:scale-105 focus:outline-none hover:text-black"
-                >
-                  Sign out
-                </button>
               </div>
             ) : (
               <button

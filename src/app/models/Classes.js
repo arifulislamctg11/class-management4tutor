@@ -13,5 +13,5 @@ const productSchema = new Schema(
 );
 
 const ClassModel =
-  mongoose.models.Product || mongoose.model("Classes", productSchema);
+  mongoose.models.Classes || mongoose.model("Classes", productSchema);
 export default ClassModel;

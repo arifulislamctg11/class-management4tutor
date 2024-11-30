@@ -23,3 +23,10 @@ export async function PUT(request, { params }) {
   });
   return NextResponse.json({ message: "Product updated" }, { status: 200 });
 }
+
+export async function DELETE(request, { params }) {
+  const { id } = params;
+  await mongodb();
+  await ClassModel.findByIdAndDelete(id);
+  return NextResponse.json({ message: "Product deleted" });
+}

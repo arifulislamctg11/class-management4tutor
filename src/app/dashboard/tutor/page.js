@@ -12,6 +12,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 const Tutor = () => {
   const {
     register,
@@ -22,7 +23,7 @@ const Tutor = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpen2, setIsOpen2] = useState(false);
   const [data, setData] = useState([]);
-  const [selectedClassId, setSelectedClassId] = useState(null);
+  const [selectedClassId, setSelectedClassId] = useState();
   const onSubmit = (data) => {
     console.log(data);
 
@@ -61,6 +62,33 @@ const Tutor = () => {
 
     reset();
     setIsOpen(false);
+  };
+
+  const handleDelete = (data) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`http://localhost:3000/api/dashboard/tutor/${data}`)
+          .then((res) => {
+            console.log(res);
+            if ((res.data.message = "Product deleted")) {
+              Swal.fire({
+                title: "Deleted!",
+                text: "Your class has been deleted.",
+                icon: "success",
+              });
+            }
+          });
+      }
+    });
   };
 
   useEffect(() => {
@@ -118,7 +146,14 @@ const Tutor = () => {
                 >
                   Edit{" "}
                 </button>
-                <button className="btn btn-error btn-sm">Delete </button>
+                <button
+                  onClick={() => {
+                    handleDelete(res._id);
+                  }}
+                  className="btn btn-error btn-sm"
+                >
+                  Delete{" "}
+                </button>
               </TableCell>
             </TableRow>
           ))}

@@ -100,7 +100,7 @@ const Tutor = () => {
         </TableHeader>
         <TableBody>
           {data.map((res) => (
-            <TableRow>
+            <TableRow key={res._id}>
               <TableCell className="font-medium">{res.classTitle} </TableCell>
               <TableCell>{res.classDetails}</TableCell>
               <TableCell>{res.materials}</TableCell>

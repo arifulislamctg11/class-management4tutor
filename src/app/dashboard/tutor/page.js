@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 const Tutor = () => {
@@ -20,6 +20,7 @@ const Tutor = () => {
     reset,
   } = useForm();
   const [isOpen, setIsOpen] = useState(false);
+  const [data, setData] = useState();
   const onSubmit = (data) => {
     console.log(data);
 
@@ -39,6 +40,18 @@ const Tutor = () => {
     reset();
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/api/dashboard/tutor")
+      .then((res) => {
+        setData(res.data.classes);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+  console.log(data);
   return (
     <div>
       <Table>
@@ -55,16 +68,25 @@ const Tutor = () => {
                 create class
               </button>
             </TableHead>
+            <TableHead>Description</TableHead>
+            <TableHead>Materials</TableHead>
+            <TableHead>Schedule</TableHead>
             <TableHead>Enrolled Students</TableHead>
             <TableHead>Performance</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow>
-            <TableCell className="font-medium">INV001</TableCell>
-            <TableCell>Paid</TableCell>
-            <TableCell>Credit Card</TableCell>
-          </TableRow>
+          {data.map((res) => (
+            <TableRow>
+              <TableCell className="font-medium">
+                {res.classTitle}{" "}
+                <button className="btn btn-warning btn-sm">Edit Classes</button>
+              </TableCell>
+              <TableCell>{res.classDetails}</TableCell>
+              <TableCell>{res.materials}</TableCell>
+              <TableCell>{res.schedule}</TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
       {/* Modal */}

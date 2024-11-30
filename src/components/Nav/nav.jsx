@@ -1,6 +1,13 @@
+"use client";
 import React from "react";
-import Image from 'next/image';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+
+import Image from "next/image";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
 const Nav = () => {
+  const session=useSession()
+    console.log(session);
   return (
     <>
       <nav className="bg-white border-gray-200 dark:bg-gray-900">
@@ -12,12 +19,13 @@ const Nav = () => {
             <Image
               src="/assets/logo.jpg"
               alt="Logo"
-              width={500}
-              height={500}
+              width={60}
+              height={60}
               priority
             />
             <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-              Management4Tutor
+              Management <br />
+              4Tutor
             </span>
           </a>
           <button
@@ -46,26 +54,25 @@ const Nav = () => {
           </button>
           <div className="hidden w-full md:block md:w-auto" id="navbar-default">
             <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+              <Link
+                href="/"
+                className="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500"
+                aria-current="page"
+              >
+                Home
+              </Link>
+
+              <Link
+                href="/features"
+                className="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500"
+                aria-current="page"
+              >
+                Features
+              </Link>
+
               <li>
                 <a
-                  href="#"
-                  className="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500"
-                  aria-current="page"
-                >
-                  Home
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                >
-                  About
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
+                  href="/services"
                   className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
                 >
                   Services
@@ -73,21 +80,54 @@ const Nav = () => {
               </li>
               <li>
                 <a
-                  href="#"
-                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                >
-                  Pricing
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
+                  href="/contact"
                   className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
                 >
                   Contact
                 </a>
               </li>
+              <li>
+                <a
+                  href="/dashboard"
+                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                >
+                  Dashboard
+                </a>
+              </li>
             </ul>
+          </div>
+          <div>
+            {session ? (
+              <div className="flex items-center justify-between gap-2">
+                <div>
+                  {session ? (
+                    <Avatar>
+                      {/* <AvatarImage src={session?.user?.img} /> */}
+                      <p>This is user img</p>
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                  ) : (
+                    <Avatar>
+                      <AvatarImage src="https://avatars.githubusercontent.com/u/124599?v=4" />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                  )}
+                </div>
+                <button
+                  onClick={() => signOut()}
+                  className="py-2 px-4 rounded-md border font-semibold bg-blue-600 text-white hover:bg-indigo-100 transform transition duration-300 ease-in-out hover:scale-105 focus:outline-none hover:text-black"
+                >
+                  Sign out
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => signIn()}
+                className="py-2 px-4 rounded-md border font-semibold bg-blue-600 text-white hover:bg-indigo-100 transform transition duration-300 ease-in-out hover:scale-105 focus:outline-none hover:text-black"
+              >
+                Sign in
+              </button>
+            )}
           </div>
         </div>
       </nav>

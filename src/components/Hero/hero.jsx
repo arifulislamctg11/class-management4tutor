@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 const Hero = () => {
   return (
-    <div>
-      <section className="py-32">
-        <div className="container">
+    <div className="mx-10">
+      <section className="py-12 container mx-auto">
+        <div className="container mx-auto border">
           <div className="grid items-center gap-8 lg:grid-cols-2">
             <div className="flex flex-col items-center  lg:items-start text-left">
               <h1 className="my-6 text-pretty text-4xl font-bold lg:text-6xl">

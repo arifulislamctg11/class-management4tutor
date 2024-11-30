@@ -32,7 +32,7 @@ export const authOptions = {
           return null;
         }
 
-        // Compare provided password with stored password
+        //hasdjhasjkdhakshdkahsdjkahsdkahsdkhasdkhakhdajkhdkahdkahdkhasdhkahsd Compare provided password with stored password
         if (currentUser.password !== password) {
           return null;
         }

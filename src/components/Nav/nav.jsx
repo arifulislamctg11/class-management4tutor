@@ -1,13 +1,16 @@
 "use client";
 import React from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import Image from "next/image";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { signIn } from "next-auth/react";
+
 const Nav = () => {
-  const session=useSession()
-    console.log(session);
+  const session = useSession();
+  console.log(session.data?.user.email);
   return (
     <>
       <nav className="bg-white border-gray-200 dark:bg-gray-900">
@@ -97,10 +100,10 @@ const Nav = () => {
             </ul>
           </div>
           <div>
-            {session ? (
+            {session.data?.user.email ? (
               <div className="flex items-center justify-between gap-2">
                 <div>
-                  {session ? (
+                  {session.data?.user.email ? (
                     <Avatar>
                       {/* <AvatarImage src={session?.user?.img} /> */}
                       <p>This is user img</p>

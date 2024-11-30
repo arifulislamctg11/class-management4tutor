@@ -1,5 +1,5 @@
 import Footer from "@/components/Footer/Footer";
-// import Hero from "@/components/Hero/Hero";
+import Hero from "@/components/Hero/Hero";
 
 import Testimonial from "@/components/Testimonial/Testimonial";
 
@@ -12,17 +12,18 @@ export default function Home() {
   return (
     <div>
       <Nav />
-      {/**Hero section  */}
-      <div className="p-2"> {/* <Hero /> */}</div>
+      {/* *Hero section  */}
+      <div className="p-2"> <Hero /></div>
       {/**Features Section */}
       <div className="p-2">
         {" "}
-        <Features />
+        <UpcomingClasses />
+        
       </div>
       {/**Upcoming Classes Section */}
       <div className="p-2">
         {" "}
-        <UpcomingClasses />
+        <Features />
       </div>
       {/**Upcoming Classes Section */}
       <div className="p-2 mb-10 mt-10">

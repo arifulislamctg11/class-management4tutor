@@ -24,6 +24,7 @@ const Page = () => {
       setAdmin(true);
     }
   });
+  console.log(admin);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -115,8 +116,6 @@ const Page = () => {
       }),
     ];
   }
-
-  // Now you can use `columns` in your table or wherever it's needed
 
   const table = useReactTable({
     data: users, // Use the fetched users data

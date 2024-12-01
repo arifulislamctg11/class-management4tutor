@@ -21,7 +21,7 @@ export async function GET(request) {
     await connectToDatabase();
 
     // Access the "feedback" collection
-    const feedbackCollection = db.collection("class");
+    const feedbackCollection = db.collection("users");
 
     // Optional: Handle filters or query parameters
     const url = new URL(request.url, `http://${request.headers.get("host")}`);

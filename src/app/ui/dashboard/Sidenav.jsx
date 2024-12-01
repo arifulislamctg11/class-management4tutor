@@ -17,12 +17,6 @@ const SideNav = () => {
       <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
         <div className="hidden h-auto w-full grow rounded-md bg-gray-50 md:block">
           <NavLinks />
-
-          <div className="flex items-end">
-            <button className="flex items-center w-full gap-1 text-xl p-4 delay-75  hover:bg-blue-100 hover:text-blue-800">
-              Sign Out
-            </button>
-          </div>
         </div>
       </div>
     </div>

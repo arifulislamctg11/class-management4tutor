@@ -42,6 +42,7 @@ export const authOptions = {
           id: currentUser._id.toString(),
           email: currentUser.email,
           name: currentUser.name || "User",
+          role: currentUser.role,
         };
       },
     }),
@@ -89,6 +90,7 @@ export const authOptions = {
               name,
               image: picture,
               provider: "google",
+              role: "Tutor",
               createdAt: new Date(),
             });
           }
@@ -103,12 +105,6 @@ export const authOptions = {
   },
   pages: {
     signIn: "/login", // Custom sign-in page
-  },
-  callbacks: {
-    async redirect({ url, baseUrl }) {
-      // Redirect to the callbackUrl or default to baseUrl
-      return url.startsWith(baseUrl) ? url : baseUrl;
-    },
   },
 };
 

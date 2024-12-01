@@ -9,11 +9,21 @@ import {
   getPaginationRowModel,
   flexRender,
 } from "@tanstack/react-table";
+import { useSession } from "next-auth/react";
 
 const Page = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [admin, setAdmin] = useState(false);
+  const session = useSession();
+
+  let role = session.data?.user.role;
+  useEffect(() => {
+    if (role === "Admin") {
+      setAdmin(true);
+    }
+  });
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -32,54 +42,81 @@ const Page = () => {
   }, []);
 
   const columnHelper = createColumnHelper();
+  let columns;
 
-  const columns = [
-    columnHelper.accessor("", {
-      id: "S.No",
-      cell: (info) => <span>{info.row.index + 1}</span>,
-      header: "S.NO",
-    }),
-    columnHelper.accessor("name", {
-      cell: (info) => <span>{info.getValue()}</span>,
-      header: "Name",
-    }),
-    columnHelper.accessor("email", {
-      cell: (info) => <span>{info.getValue()}</span>,
-      header: "Email",
-    }),
-    columnHelper.accessor("Delete", {
-      cell: (info) => (
-        <span>
-          {<button className="btn btn-sm btn-error text-white">Delete</button>}
-        </span>
-      ),
-      header: "Delete",
-    }),
-    columnHelper.accessor("Details", {
-      cell: (info) => (
-        <span>
-          {
+  if (admin === true) {
+    columns = [
+      columnHelper.accessor("", {
+        id: "S.No",
+        cell: (info) => <span>{info.row.index + 1}</span>,
+        header: "S.NO",
+      }),
+      columnHelper.accessor("name", {
+        cell: (info) => <span>{info.getValue()}</span>,
+        header: "Name",
+      }),
+      columnHelper.accessor("email", {
+        cell: (info) => <span>{info.getValue()}</span>,
+        header: "Email",
+      }),
+      columnHelper.accessor("Details", {
+        cell: (info) => (
+          <span>
             <button className="btn btn-sm btn-warning text-white">
               Details
             </button>
-          }
-        </span>
-      ),
-      header: "Details",
-    }),
-    columnHelper.accessor("Admin", {
-      cell: (info) => (
-        <span>
-          {
+          </span>
+        ),
+        header: "Details",
+      }),
+      columnHelper.accessor("Delete", {
+        cell: (info) => (
+          <span>
+            <button className="btn btn-sm btn-error text-white">Delete</button>
+          </span>
+        ),
+        header: "Delete",
+      }),
+      columnHelper.accessor("Admin", {
+        cell: (info) => (
+          <span>
             <button className="btn btn-sm btn-primary text-white">
               Make Admin
             </button>
-          }
-        </span>
-      ),
-      header: "Admin",
-    }),
-  ];
+          </span>
+        ),
+        header: "Admin",
+      }),
+    ];
+  } else {
+    columns = [
+      columnHelper.accessor("", {
+        id: "S.No",
+        cell: (info) => <span>{info.row.index + 1}</span>,
+        header: "S.NO",
+      }),
+      columnHelper.accessor("name", {
+        cell: (info) => <span>{info.getValue()}</span>,
+        header: "Name",
+      }),
+      columnHelper.accessor("email", {
+        cell: (info) => <span>{info.getValue()}</span>,
+        header: "Email",
+      }),
+      columnHelper.accessor("Details", {
+        cell: (info) => (
+          <span>
+            <button className="btn btn-sm btn-warning text-white">
+              Details
+            </button>
+          </span>
+        ),
+        header: "Details",
+      }),
+    ];
+  }
+
+  // Now you can use `columns` in your table or wherever it's needed
 
   const table = useReactTable({
     data: users, // Use the fetched users data

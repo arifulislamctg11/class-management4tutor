@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased mx-auto max-w-screen-2xl`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-white antialiased mx-auto max-w-screen-2xl`}
       >
         
         <Toaster />

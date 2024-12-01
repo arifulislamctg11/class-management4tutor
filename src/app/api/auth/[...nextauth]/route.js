@@ -104,6 +104,12 @@ export const authOptions = {
   pages: {
     signIn: "/login", // Custom sign-in page
   },
+  callbacks: {
+    async redirect({ url, baseUrl }) {
+      // Redirect to the callbackUrl or default to baseUrl
+      return url.startsWith(baseUrl) ? url : baseUrl;
+    },
+  },
 };
 
 const handler = NextAuth(authOptions);

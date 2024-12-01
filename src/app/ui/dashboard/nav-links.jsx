@@ -8,6 +8,10 @@ const NavLinks = () => {
 
   const links = [
     {
+      name: "Home",
+      href: "/",
+    },
+    {
       name: "Attendance",
       href: "/dashboard/attendance",
     },

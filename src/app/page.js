@@ -10,7 +10,7 @@ import Nav from "@/components/Nav/nav";
 
 export default function Home() {
   return (
-    <div>
+    <div className="bg-white">
       <Nav />
       {/* *Hero section  */}
       <div className="p-2"> <Hero /></div>

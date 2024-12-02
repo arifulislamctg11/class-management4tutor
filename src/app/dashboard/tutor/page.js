@@ -1,393 +1,213 @@
 "use client";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
-import Swal from "sweetalert2";
-const Tutor = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm();
-  const [isOpen, setIsOpen] = useState(false);
-  const [isOpen2, setIsOpen2] = useState(false);
-  const [data, setData] = useState([]);
-  const [selectedClassId, setSelectedClassId] = useState();
-  const onSubmit = (data) => {
-    console.log(data);
+import {
+  createColumnHelper,
+  useReactTable,
+  getCoreRowModel,
+  getPaginationRowModel,
+  flexRender,
+} from "@tanstack/react-table";
+import { useSession } from "next-auth/react";
 
-    axios
-      .post("http://localhost:3000/api/dashboard/tutor", data)
-      .then((response) => {
-        if ((response.data.message = "Product Created")) {
-          toast.success("You have successfully added");
-        }
-        console.log(response);
-      })
-      .catch((error) => {
-        toast.error("There was an error adding the data");
-        console.log(error);
-      });
+const Page = () => {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [admin, setAdmin] = useState(false);
+  const session = useSession();
 
-    reset();
-    setIsOpen(false);
-  };
-  const onSubmit2 = (data) => {
-    console.log(data);
-    console.log(selectedClassId);
-
-    //update operation
-    axios
-      .put(`http://localhost:3000/api/dashboard/tutor/${selectedClassId}`, data)
-      .then((res) => {
-        if ((res.data.message = "Product updated")) {
-          toast.success("successfully updated");
-        }
-      })
-      .catch((error) => {
-        toast.error("There was an error updated the data");
-        console.log(error);
-      });
-
-    reset();
-    setIsOpen(false);
-  };
-
-  const handleDelete = (data) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        axios
-          .delete(`http://localhost:3000/api/dashboard/tutor/${data}`)
-          .then((res) => {
-            console.log(res);
-            if ((res.data.message = "Product deleted")) {
-              Swal.fire({
-                title: "Deleted!",
-                text: "Your class has been deleted.",
-                icon: "success",
-              });
-            }
-          });
-      }
-    });
-  };
+  let role = session.data?.user.role;
+  useEffect(() => {
+    if (role === "Admin") {
+      setAdmin(true);
+    }
+  });
+  console.log(admin);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/api/dashboard/tutor")
-      .then((res) => {
-        setData(res.data.classes);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    const fetchUsers = async () => {
+      try {
+        // Make an API request to fetch users
+        const response = await axios.get("/api/dashboard/attendance");
+        setUsers(response.data.users); // Ensure the API returns an array of users
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
   }, []);
 
+  const columnHelper = createColumnHelper();
+  let columns;
+
+  if (admin === true) {
+    columns = [
+      columnHelper.accessor("", {
+        id: "S.No",
+        cell: (info) => <span>{info.row.index + 1}</span>,
+        header: "S.NO",
+      }),
+      columnHelper.accessor("name", {
+        cell: (info) => <span>{info.getValue()}</span>,
+        header: "Name",
+      }),
+      columnHelper.accessor("email", {
+        cell: (info) => <span>{info.getValue()}</span>,
+        header: "Email",
+      }),
+      columnHelper.accessor("Details", {
+        cell: (info) => (
+          <span>
+            <button className="btn btn-sm btn-warning text-white">
+              Details
+            </button>
+          </span>
+        ),
+        header: "Details",
+      }),
+      columnHelper.accessor("Delete", {
+        cell: (info) => (
+          <span>
+            <button className="btn btn-sm btn-error text-white">Delete</button>
+          </span>
+        ),
+        header: "Delete",
+      }),
+      columnHelper.accessor("Admin", {
+        cell: (info) => (
+          <span>
+            <button className="btn btn-sm btn-primary text-white">
+              Make Admin
+            </button>
+          </span>
+        ),
+        header: "Admin",
+      }),
+    ];
+  } else {
+    columns = [
+      columnHelper.accessor("", {
+        id: "S.No",
+        cell: (info) => <span>{info.row.index + 1}</span>,
+        header: "S.NO",
+      }),
+      columnHelper.accessor("name", {
+        cell: (info) => <span>{info.getValue()}</span>,
+        header: "Name",
+      }),
+      columnHelper.accessor("email", {
+        cell: (info) => <span>{info.getValue()}</span>,
+        header: "Email",
+      }),
+      columnHelper.accessor("Details", {
+        cell: (info) => (
+          <span>
+            <button className="btn btn-sm btn-warning text-white">
+              Details
+            </button>
+          </span>
+        ),
+        header: "Details",
+      }),
+    ];
+  }
+
+  const table = useReactTable({
+    data: users, // Use the fetched users data
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+  });
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
   return (
-    <div>
-      <Table>
-        <TableCaption>A list of your Classes.</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px] flex items-center gap-2">
-              Classes{" "}
-              <button
-                onClick={() => setIsOpen(true)}
-                className="btn btn-sm btn-success text-white"
+    <div className="p-4">
+      <div className="overflow-x-auto">
+        <table className="min-w-full border border-gray-700 text-left">
+          <thead className="bg-gray-600 text-white">
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <th
+                    key={header.id}
+                    className="capitalize px-2 md:px-4 py-2 text-sm md:text-base text-white"
+                  >
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map((row, index) => (
+              <tr
+                key={row.id}
+                className={`${index % 2 === 0 ? "bg-white" : "bg-gray-200"}`}
               >
-                {" "}
-                create class
-              </button>
-            </TableHead>
-            <TableHead>Description</TableHead>
-            <TableHead>Materials</TableHead>
-            <TableHead>Schedule</TableHead>
-            <TableHead>Enrolled Students</TableHead>
-            <TableHead>Performance</TableHead>
-            <TableHead>Action</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data.map((res) => (
-            <TableRow key={res._id}>
-              <TableCell className="font-medium">{res.classTitle} </TableCell>
-              <TableCell>{res.classDetails}</TableCell>
-              <TableCell>{res.materials}</TableCell>
-              <TableCell>{res.schedule}</TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell>
-                {" "}
-                <button
-                  onClick={() => {
-                    setSelectedClassId(res._id);
-                    setIsOpen2(true);
-                  }}
-                  className="btn btn-warning btn-sm"
-                >
-                  Edit{" "}
-                </button>
-                <button
-                  onClick={() => {
-                    handleDelete(res._id);
-                  }}
-                  className="btn btn-error btn-sm"
-                >
-                  Delete{" "}
-                </button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      {/* Modal */}
-      {isOpen && (
-        <div className="modal modal-open">
-          <div className="modal-box">
-            <h3 className="font-bold text-lg">Add Class Details</h3>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              {/**class tittle */}
-
-              <div>
-                <label className="label">
-                  <span className="label-text">Class Details</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="Enter class Title"
-                  className={`input input-bordered w-full ${
-                    errors.classTitle ? "input-error" : ""
-                  }`}
-                  {...register("classTitle", {
-                    required: "Class Title are required",
-                  })}
-                />
-                {errors.classTitle && (
-                  <span className="text-red-500 text-sm">
-                    {errors.classTitle.message}
-                  </span>
-                )}
-              </div>
-
-              {/* Class Details */}
-              <div>
-                <label className="label">
-                  <span className="label-text">Class Details</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="Enter class details"
-                  className={`input input-bordered w-full ${
-                    errors.classDetails ? "input-error" : ""
-                  }`}
-                  {...register("classDetails", {
-                    required: "Class details are required",
-                  })}
-                />
-                {errors.classDetails && (
-                  <span className="text-red-500 text-sm">
-                    {errors.classDetails.message}
-                  </span>
-                )}
-              </div>
-
-              {/* Materials */}
-              <div>
-                <label className="label">
-                  <span className="label-text">Materials</span>
-                </label>
-                <textarea
-                  placeholder="Enter materials"
-                  className={`textarea textarea-bordered w-full ${
-                    errors.materials ? "textarea-error" : ""
-                  }`}
-                  {...register("materials", {
-                    required: "Materials are required",
-                  })}
-                ></textarea>
-                {errors.materials && (
-                  <span className="text-red-500 text-sm">
-                    {errors.materials.message}
-                  </span>
-                )}
-              </div>
-
-              {/* Schedule */}
-              <div>
-                <label className="label">
-                  <span className="label-text">Schedule</span>
-                </label>
-                <input
-                  type="date" // Ensures users pick a valid date and time
-                  className={`input input-bordered w-full ${
-                    errors.schedule ? "input-error" : ""
-                  }`}
-                  {...register("schedule", {
-                    required: "Schedule is required", // Required validation
-                    validate: (value) => {
-                      if (!value || isNaN(new Date(value).getTime())) {
-                        return "Please provide a valid date and time";
-                      }
-                      return true;
-                    },
-                  })}
-                />
-                {errors.schedule && (
-                  <span className="text-red-500 text-sm">
-                    {errors.schedule.message}
-                  </span>
-                )}
-              </div>
-
-              {/* Modal Actions */}
-              <div className="modal-action">
-                <button
-                  type="button"
-                  className="btn"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Cancel
-                </button>
-                <button type="submit" className="btn btn-primary">
-                  Submit
-                </button>
-              </div>
-            </form>
+                {row.getVisibleCells().map((cell) => (
+                  <td
+                    key={cell.id}
+                    className="px-2 md:px-4 py-2 text-sm md:text-base text-black"
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {table.getPageCount() > 1 && (
+        <div className="flex flex-col md:flex-row items-center justify-between mt-4 gap-2">
+          <div className="flex gap-2">
+            <button
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+              className="p-1 border border-gray-300 px-2 disabled:opacity-30 bg-black text-white"
+            >
+              {"<"}
+            </button>
+            <button
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+              className="p-1 border border-gray-300 px-2 disabled:opacity-30 bg-black text-white"
+            >
+              {">"}
+            </button>
           </div>
-        </div>
-      )}
-      {/* Modal */}
-      {isOpen2 && (
-        <div className="modal modal-open">
-          <div className="modal-box">
-            <h3 className="font-bold text-lg">Edit Class Details</h3>
-            <form onSubmit={handleSubmit(onSubmit2)} className="space-y-4">
-              {/**class tittle */}
-
-              <div>
-                <label className="label">
-                  <span className="label-text">Class Details</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="Enter class Title"
-                  className={`input input-bordered w-full ${
-                    errors.classTitle ? "input-error" : ""
-                  }`}
-                  {...register("classTitle", {
-                    required: "Class Title are required",
-                  })}
-                />
-                {errors.classTitle && (
-                  <span className="text-red-500 text-sm">
-                    {errors.classTitle.message}
-                  </span>
-                )}
-              </div>
-
-              {/* Class Details */}
-              <div>
-                <label className="label">
-                  <span className="label-text">Class Details</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="Enter class details"
-                  className={`input input-bordered w-full ${
-                    errors.classDetails ? "input-error" : ""
-                  }`}
-                  {...register("classDetails", {
-                    required: "Class details are required",
-                  })}
-                />
-                {errors.classDetails && (
-                  <span className="text-red-500 text-sm">
-                    {errors.classDetails.message}
-                  </span>
-                )}
-              </div>
-
-              {/* Materials */}
-              <div>
-                <label className="label">
-                  <span className="label-text">Materials</span>
-                </label>
-                <textarea
-                  placeholder="Enter materials"
-                  className={`textarea textarea-bordered w-full ${
-                    errors.materials ? "textarea-error" : ""
-                  }`}
-                  {...register("materials", {
-                    required: "Materials are required",
-                  })}
-                ></textarea>
-                {errors.materials && (
-                  <span className="text-red-500 text-sm">
-                    {errors.materials.message}
-                  </span>
-                )}
-              </div>
-
-              {/* Schedule */}
-              <div>
-                <label className="label">
-                  <span className="label-text">Schedule</span>
-                </label>
-                <input
-                  type="date" // Ensures users pick a valid date and time
-                  className={`input input-bordered w-full ${
-                    errors.schedule ? "input-error" : ""
-                  }`}
-                  {...register("schedule", {
-                    required: "Schedule is required", // Required validation
-                    validate: (value) => {
-                      if (!value || isNaN(new Date(value).getTime())) {
-                        return "Please provide a valid date and time";
-                      }
-                      return true;
-                    },
-                  })}
-                />
-                {errors.schedule && (
-                  <span className="text-red-500 text-sm">
-                    {errors.schedule.message}
-                  </span>
-                )}
-              </div>
-
-              {/* Modal Actions */}
-              <div className="modal-action">
-                <button
-                  type="button"
-                  className="btn"
-                  onClick={() => setIsOpen2(false)}
-                >
-                  Cancel
-                </button>
-                <button type="submit" className="btn btn-primary">
-                  Submit
-                </button>
-              </div>
-            </form>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-white">Page</span>
+            <strong className="text-sm text-white">
+              {table.getState().pagination.pageIndex + 1} of{" "}
+              {table.getPageCount()}
+            </strong>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-white">Go to page</span>
+            <input
+              type="number"
+              defaultValue={table.getState().pagination.pageIndex + 1}
+              className="border p-1 rounded bg-black text-white w-16"
+              onChange={(e) => {
+                const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                table.setPageIndex(page);
+              }}
+            />
           </div>
         </div>
       )}
@@ -395,4 +215,4 @@ const Tutor = () => {
   );
 };
 
-export default Tutor;
+export default Page;

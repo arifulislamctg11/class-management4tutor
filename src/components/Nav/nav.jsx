@@ -104,55 +104,44 @@ const Nav = () => {
             {session.data?.user.email ? (
               <div className="flex items-center justify-between gap-2">
                 <div>
-                  {session.data?.user.email ? (
-                    <div className="dropdown dropdown-end  ">
-                      <label
-                        tabIndex="0"
-                        className="btn btn-ghost btn-circle avatar"
-                      >
-                        <div className="w-16 rounded-full">
-                          <img src="https://avatars.githubusercontent.com/u/124599?v=4"></img>
-                        </div>
-                      </label>
-                      <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-                        <li>
-                          <button className="flex items-center gap-2">
-                            <p className=" font-bold">Email:</p>{" "}
-                            {session.data?.user.email}
-                          </button>
+                  <div className="dropdown dropdown-end">
+                    <label tabIndex="0" className="btn btn-ghost btn-circle avatar">
+                      <div className="w-16 rounded-full">
+                        <img src="https://avatars.githubusercontent.com/u/124599?v=4" alt="User Avatar" />
+                      </div>
+                    </label>
+                    <ul className="menu dropdown-content bg-slate-500 text-white rounded-box z-[1] w-80 p-2 shadow">
+                      <li>
+                        <button className="flex items-center gap-2">
+                          <p className="font-bold">Email:</p> {session.data.user.email}
+                        </button>
+                        <button className="flex items-center gap-2">
+                          <p className="font-bold">Name:</p> {session.data.user.name}
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          onClick={() => signOut()}
+                          className="py-2 px-6 rounded-md border font-semibold bg-indigo-600 text-white hover:bg-indigo-500 transform transition duration-300 ease-in-out hover:scale-105 focus:outline-none hover:text-black mx-auto block"
+                        >
+                          Sign out
+                        </button>
 
-                          <button className="flex items-center gap-2">
-                            <p className=" font-bold">Name:</p>{" "}
-                            {session.data?.user.name}
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            onClick={() => signOut()}
-                            className="py-2 px-4 rounded-md border font-semibold bg-red-600 text-white hover:bg-indigo-100 transform transition duration-300 ease-in-out hover:scale-105 focus:outline-none hover:text-black"
-                          >
-                            Sign out
-                          </button>
-                        </li>
-                      </ul>
-                    </div>
-                  ) : (
-                    <Avatar>
-                      <AvatarImage src="https://avatars.githubusercontent.com/u/124599?v=4" />
-                      <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                  )}
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             ) : (
               <button
                 onClick={() => signIn()}
-                className="py-2 px-4 rounded-md border font-semibold bg-blue-600 text-white hover:bg-indigo-100 transform transition duration-300 ease-in-out hover:scale-105 focus:outline-none hover:text-black"
+                className="py-2 px-4 rounded-md border font-semibold bg-blue-600 text-white hover:bg-blue-500 transform transition duration-300 ease-in-out hover:scale-105 focus:outline-none hover:text-black"
               >
                 Sign in
               </button>
             )}
           </div>
+
         </div>
       </nav>
     </>

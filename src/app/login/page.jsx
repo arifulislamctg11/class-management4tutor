@@ -5,14 +5,22 @@ import Link from "next/link";
 import { FaGoogle } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
+import { useSearchParams, useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+
 // Dynamically import Lottie component
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 import loginAnimation from "../../../public/assets/login.json";
 import signup_Animation from "../../../public/assets/Animation.json";
-import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+
 const Login = () => {
+  const searchParams = useSearchParams();
   const router = useRouter();
+
+  // Get redirect path or default to "/"
+  const redirectPath = searchParams.get("redirect") || "/";
+  console.log(redirectPath, "redirectPath");
+
   const [loading, setLoading] = useState(true);
   const {
     register,
@@ -30,30 +38,33 @@ const Login = () => {
     console.log(data);
 
     const result = await signIn("credentials", {
-      redirect: false,
+      redirect: false, // Disable default redirection
       email,
       password,
     });
 
     if (result?.error) {
       console.log("Error signing in:", result.error);
-
-      toast.error("Are you signed in?");
+      toast.error("Invalid email or password.");
     } else {
       console.log("Sign-in successful!");
       toast.success("Welcome Back!");
-      router.push("/");
+
+      // Redirect user after login
+      if (redirectPath === "/dashboard") {
+        router.push("/dashboard");
+      } else {
+        router.push("/");
+      }
     }
   };
 
   const handleGoogleSignIn = async () => {
     const result = await signIn("google", {
-      callbackUrl: "http://localhost:3000",
+      callbackUrl: redirectPath, // Pass redirectPath to Google
     });
+
     if (!result?.error) {
-      console.log("Google Sign-in successful!");
-      toast.success("Welcome Back!");
-      router.push("/"); // Redirect to homepage manually
     } else {
       console.log("Error signing in with Google:", result.error);
       toast.error("Google sign-in failed.");

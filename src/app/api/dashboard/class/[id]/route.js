@@ -9,7 +9,7 @@ export async function GET(request, { params }) {
   const users = await UserModel.findOne({ _id: id });
   return NextResponse.json({ users });
 }
-
+//jhk
 export async function PATCH(request, { params }) {
   const { id } = params;
   const { role } = await request.json();

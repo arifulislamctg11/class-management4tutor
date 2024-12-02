@@ -42,6 +42,7 @@ export const authOptions = {
           id: currentUser._id.toString(),
           email: currentUser.email,
           name: currentUser.name || "User",
+          role: currentUser.role,
         };
       },
     }),
@@ -55,14 +56,30 @@ export const authOptions = {
   callbacks: {
     // Session callback to attach user info to the session
     async session({ session, token }) {
-      session.user.id = token.id;
-      session.user.email = token.email;
+      const db = await mongodb();
+      const userCollection = db.collection("users");
+
+      // Fetch full user data from the database using token.email
+      const user = await userCollection.findOne({ email: token.email });
+
+      if (user) {
+        session.user = {
+          id: user._id.toString(),
+          email: user.email,
+          name: user.name || "User",
+          image: user.image,
+          role: user.role,
+          provider: user.provider,
+          createdAt: user.createdAt,
+        };
+      }
+
       return session;
     },
 
     // JWT callback to handle tokens
     async jwt({ token, user, account }) {
-      // If a new user is signed in
+      // If a new user is signed in, attach their info to the token
       if (user) {
         token.id = user.id;
         token.email = user.email;
@@ -89,6 +106,7 @@ export const authOptions = {
               name,
               image: picture,
               provider: "google",
+              role: "Tutor",
               createdAt: new Date(),
             });
           }
@@ -101,6 +119,7 @@ export const authOptions = {
       return true; // Allow sign-in
     },
   },
+
   pages: {
     signIn: "/login", // Custom sign-in page
   },

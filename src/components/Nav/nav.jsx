@@ -92,7 +92,7 @@ const Nav = () => {
               </li>
               <li>
                 <a
-                  href="/dashboard"
+                  href="/dashboard/attendance"
                   className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
                 >
                   Dashboard
@@ -105,18 +105,26 @@ const Nav = () => {
               <div className="flex items-center justify-between gap-2">
                 <div>
                   <div className="dropdown dropdown-end">
-                    <label tabIndex="0" className="btn btn-ghost btn-circle avatar">
+                    <label
+                      tabIndex="0"
+                      className="btn btn-ghost btn-circle avatar"
+                    >
                       <div className="w-16 rounded-full">
-                        <img src="https://avatars.githubusercontent.com/u/124599?v=4" alt="User Avatar" />
+                        <img
+                          src="https://avatars.githubusercontent.com/u/124599?v=4"
+                          alt="User Avatar"
+                        />
                       </div>
                     </label>
                     <ul className="menu dropdown-content bg-slate-500 text-white rounded-box z-[1] w-80 p-2 shadow">
                       <li>
                         <button className="flex items-center gap-2">
-                          <p className="font-bold">Email:</p> {session.data.user.email}
+                          <p className="font-bold">Email:</p>{" "}
+                          {session.data.user.email}
                         </button>
                         <button className="flex items-center gap-2">
-                          <p className="font-bold">Name:</p> {session.data.user.name}
+                          <p className="font-bold">Name:</p>{" "}
+                          {session.data.user.name}
                         </button>
                       </li>
                       <li>
@@ -126,7 +134,6 @@ const Nav = () => {
                         >
                           Sign out
                         </button>
-
                       </li>
                     </ul>
                   </div>
@@ -141,7 +148,6 @@ const Nav = () => {
               </button>
             )}
           </div>
-
         </div>
       </nav>
     </>

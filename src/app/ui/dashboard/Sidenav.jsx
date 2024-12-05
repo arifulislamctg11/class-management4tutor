@@ -6,7 +6,7 @@ import NavLinks from "./nav-links";
 import { signOut, useSession } from "next-auth/react";
 
 const SideNav = () => {
-  const { data: session } = useSession({ required: true });
+  const { data: session, status, update } = useSession();
 
   return (
     <div className="flex h-full flex-col px-3 py-4 md:px-2 bg-gray-800">
@@ -42,7 +42,7 @@ const SideNav = () => {
             <p className="text-white text-lg font-semibold">
               {session?.user.name}
             </p>
-            <p className="text-gray-400 text-sm">{session?.user.email}</p>
+
             {/* Logout Button */}
             {session?.user.email ? (
               <button

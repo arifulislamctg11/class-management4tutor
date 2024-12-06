@@ -1,11 +1,13 @@
 import Footer from "@/components/Footer/Footer";
-import Hero from "@/components/Hero/Hero";
+
 
 import Testimonial from "@/components/Testimonial/Testimonial";
 
 import UpcomingClasses from "@/components/UpcomingClases/UpcomingClasses";
-import Features from "../components/features/page";
+import Features from "./features/page";
 import Nav from "@/components/Nav/nav";
+import Hero from "@/components/Hero/Hero";
+
 
 
 export default function Home() {
@@ -18,7 +20,7 @@ export default function Home() {
       <div className="p-2">
         {" "}
         <UpcomingClasses />
-        
+
       </div>
       {/**Upcoming Classes Section */}
       <div className="p-2">

@@ -3,7 +3,8 @@ import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 
-const handler = NextAuth({
+export const authOptions = {
+  secret: process.env.NEXT_PUBLIC_AUTH_SECRET,
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
@@ -31,7 +32,7 @@ const handler = NextAuth({
           return null;
         }
 
-        // Compare provided password with stored password
+        //hasdjhasjkdhakshdkahsdjkahsdkahsdkhasdkhakhdajkhdkahdkahdkhasdhkahsd Compare provided password with stored password
         if (currentUser.password !== password) {
           return null;
         }
@@ -41,6 +42,7 @@ const handler = NextAuth({
           id: currentUser._id.toString(),
           email: currentUser.email,
           name: currentUser.name || "User",
+          role: currentUser.role,
         };
       },
     }),
@@ -54,14 +56,30 @@ const handler = NextAuth({
   callbacks: {
     // Session callback to attach user info to the session
     async session({ session, token }) {
-      session.user.id = token.id;
-      session.user.email = token.email;
+      const db = await mongodb();
+      const userCollection = db.collection("users");
+
+      // Fetch full user data from the database using token.email
+      const user = await userCollection.findOne({ email: token.email });
+
+      if (user) {
+        session.user = {
+          id: user._id.toString(),
+          email: user.email,
+          name: user.name || "User",
+          image: user.image,
+          role: user.role,
+          provider: user.provider,
+          createdAt: user.createdAt,
+        };
+      }
+
       return session;
     },
 
     // JWT callback to handle tokens
     async jwt({ token, user, account }) {
-      // If a new user is signed in
+      // If a new user is signed in, attach their info to the token
       if (user) {
         token.id = user.id;
         token.email = user.email;
@@ -88,6 +106,7 @@ const handler = NextAuth({
               name,
               image: picture,
               provider: "google",
+              role: "Tutor",
               createdAt: new Date(),
             });
           }
@@ -100,9 +119,12 @@ const handler = NextAuth({
       return true; // Allow sign-in
     },
   },
+
   pages: {
     signIn: "/login", // Custom sign-in page
   },
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

@@ -1,7 +1,17 @@
+"use client";
 import React from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { signIn } from "next-auth/react";
+
 const Nav = () => {
+  const session = useSession();
+  console.log(session.data?.user.email);
+  console.log(session?.data);
   return (
     <>
       <nav className="bg-white border-gray-200 dark:bg-gray-900">
@@ -63,10 +73,10 @@ const Nav = () => {
               >
                 Features
               </Link>
-              
+
               <li>
                 <a
-                  href="#"
+                  href="/services"
                   className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
                 >
                   Services
@@ -74,21 +84,71 @@ const Nav = () => {
               </li>
               <li>
                 <a
-                  href="#"
-                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                >
-                  Services
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
+                  href="/contact"
                   className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
                 >
                   Contact
                 </a>
               </li>
+              <li>
+                <a
+                  href="/dashboard"
+                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                >
+                  Dashboard
+                </a>
+              </li>
             </ul>
+          </div>
+          <div>
+            {session.data?.user.email ? (
+              <div className="flex items-center justify-between gap-2">
+                <div>
+                  <div className="dropdown dropdown-end">
+                    <label
+                      tabIndex="0"
+                      className="btn btn-ghost btn-circle avatar"
+                    >
+                      <div className="w-16 rounded-full">
+                        <img
+                          src="https://avatars.githubusercontent.com/u/124599?v=4"
+                          alt="User Avatar"
+                        />
+                      </div>
+                    </label>
+                    <ul className="menu dropdown-content bg-slate-500 text-white rounded-box z-[1] w-80 p-2 shadow">
+                      <li>
+                        <button className="flex items-center gap-2">
+                          <p className="font-bold">Email:</p>{" "}
+                          {session.data.user.email}
+                        </button>
+                        <button className="flex items-center gap-2">
+                          <p className="font-bold">Name:</p>{" "}
+                          {session.data.user.name}
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          onClick={() => signOut()}
+                          className="py-2 px-6 rounded-md border font-semibold bg-indigo-600 text-white hover:bg-indigo-500 transform transition duration-300 ease-in-out hover:scale-105 focus:outline-none hover:text-black mx-auto block"
+                        >
+                          Sign out
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <Link href="/login">
+                <button
+                  // onClick={() => signIn()}
+                  className="py-2 px-4 rounded-md border font-semibold bg-blue-600 text-white hover:bg-blue-500 transform transition duration-300 ease-in-out hover:scale-105 focus:outline-none hover:text-black"
+                >
+                  Sign in
+                </button>
+              </Link>
+            )}
           </div>
         </div>
       </nav>

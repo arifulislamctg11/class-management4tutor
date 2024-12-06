@@ -2,7 +2,7 @@
 import Link from "next/link";
 import React from "react";
 
-import NavLinks from "./nav-links";
+import NavLinks from "../../../components/Navlink/Navlinks";
 import { signOut, useSession } from "next-auth/react";
 
 const SideNav = () => {

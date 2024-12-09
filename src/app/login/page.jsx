@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 // Dynamically import Lottie component (only on the client)
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 import loginAnimation from "../../../public/assets/login.json";
+
 import signup_Animation from "../../../public/assets/Animation.json";
 
 const Login = () => {

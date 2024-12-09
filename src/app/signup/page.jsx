@@ -7,7 +7,7 @@ import Link from "next/link";
 
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
-import signup_Animation from "../../../public/assets/Animation.json";
+import singUpAnimation from "../../../public/assets/Animation.json";
 import axios from "axios";
 
 const Signup = () => {
@@ -171,7 +171,7 @@ const Signup = () => {
         {/* Lottie Animation Section */}
         <div className="w-full lg:w-1/2 flex justify-center items-center p-6 lg:p-10 bg-blue-500 bg-opacity-5">
           <Lottie
-            animationData={signup_Animation}
+            animationData={singUpAnimation}
             className="w-full h-full max-h-[400px] md:max-h-[500px] lg:max-h-[600px]"
           />
         </div>

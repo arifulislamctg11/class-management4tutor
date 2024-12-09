@@ -9,7 +9,6 @@ import Nav from "@/components/Nav/nav";
 import Hero from "@/components/Hero/Hero";
 
 
-
 export default function Home() {
   return (
     <div className="bg-white">

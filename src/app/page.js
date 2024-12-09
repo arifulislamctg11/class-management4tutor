@@ -6,7 +6,7 @@ import Testimonial from "@/components/Testimonial/Testimonial";
 import UpcomingClasses from "@/components/UpcomingClases/UpcomingClasses";
 import Features from "./features/page";
 import Nav from "@/components/Nav/nav";
-import Hero from "@/components/Hero/Hero";
+import MyHero from "@/components/Hero/MyHero";
 
 
 export default function Home() {
@@ -14,7 +14,7 @@ export default function Home() {
     <div className="bg-white">
       <Nav />
       {/* *Hero section  */}
-      <div className="p-2"> <Hero /></div>
+      <div className="p-2"> <MyHero /></div>
       {/**Features Section */}
       <div className="p-2">
         {" "}

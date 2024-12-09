@@ -4,7 +4,7 @@ import { ArrowDownRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-const Hero = () => {
+const MyHero = () => {
   return (
     <div className="mx-10">
       <section className="py-12 container mx-auto">
@@ -41,4 +41,4 @@ const Hero = () => {
   );
 };
 
-export default Hero;
+export default MyHero;
